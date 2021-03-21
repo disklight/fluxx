@@ -18,8 +18,7 @@ namespace fluxx
     {
         string strConn = ConfigurationManager.ConnectionStrings["fluxx.Properties.Settings.BaoShan1880CoilYardConnectionString"].ToString();
         DataTable dt = null;
-        List<List<string>> result = new List<List<string>>();
-        List<string> temp = new List<string>();
+
 
         public Form1()
         {
@@ -29,8 +28,17 @@ namespace fluxx
 
         private void button1_Click(object sender, EventArgs e)
         {
+            List<List<string>> result = new List<List<string>>();
+            List<string> temp = new List<string>();
+            dataGridView.Rows.Clear();
+            //if(dt_xx != null)
+            //{
+            //    dt_xx.Rows.Clear();
+            //    dataGridView.DataSource = dt_xx;
+            //}
+            
             //设置数据表格为只读
-            dataGridView.ReadOnly = true;
+            //dataGridView.ReadOnly = true;
             //不允许添加行
             dataGridView.AllowUserToAddRows = false;
             using (SqlConnection conn = new SqlConnection(strConn)) //定义连接对象并实例化（实例化时需要提供连接字符串作为参数）
@@ -40,6 +48,11 @@ namespace fluxx
                     conn.Open(); //打开数据库连接
                 }
                 string sql = "SELECT OPERATION.ProductBId, OPERATIONLIST.BId FROM ProductOperation AS OPERATION INNER JOIN ProductOperationList AS OPERATIONLIST ON OPERATION.ListId = OPERATIONLIST.Id";
+                if (TextBoxProduct.TextLength != 0)
+                {
+                    sql += " AND OPERATION.ProductBId LIKE '%" + TextBoxProduct.Text + "%'";
+                }
+                
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     using (SqlDataReader dr = cmd.ExecuteReader())
@@ -49,7 +62,7 @@ namespace fluxx
                     }
                 }
             }
-            if (dt != null)
+            if (dt != null && dt.Rows[0][0] != null)
             {
                 temp.Add(dt.Rows[0][0].ToString());
                 for (int i = 0; i < dt.Rows.Count; i++) //行

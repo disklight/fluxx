@@ -40,6 +40,7 @@
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TextBoxProduct = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baoShan1880CoilYardDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baoShan1880CoilYardDataSetBindingSource)).BeginInit();
@@ -51,7 +52,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
+            this.button1.Text = "刷新";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -135,11 +136,20 @@
             this.Column6.Name = "Column6";
             this.Column6.ReadOnly = true;
             // 
+            // TextBoxProduct
+            // 
+            this.TextBoxProduct.Location = new System.Drawing.Point(149, 9);
+            this.TextBoxProduct.Name = "TextBoxProduct";
+            this.TextBoxProduct.Size = new System.Drawing.Size(351, 25);
+            this.TextBoxProduct.TabIndex = 2;
+            this.TextBoxProduct.TextChanged += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1525, 596);
+            this.Controls.Add(this.TextBoxProduct);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
@@ -148,6 +158,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.baoShan1880CoilYardDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baoShan1880CoilYardDataSetBindingSource)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -164,6 +175,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
+        private System.Windows.Forms.TextBox TextBoxProduct;
     }
 }
 
