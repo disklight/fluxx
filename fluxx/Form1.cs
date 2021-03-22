@@ -18,6 +18,8 @@ namespace fluxx
     {
         string strConn = ConfigurationManager.ConnectionStrings["fluxx.Properties.Settings.BaoShan1880CoilYardConnectionString"].ToString();
         DataTable dt = null;
+        DataTable dthistory = null;
+        List<string> Status = new List<string>() { "Canceled", "Successful", "Rejected" };
 
 
         public Form1()
@@ -47,15 +49,28 @@ namespace fluxx
                 {
                     conn.Open(); //打开数据库连接
                 }
+
+                string historysql = "SELECT ProductBId,ListBId,ExecutionStatus FROM ProductOperationHistory";
+
                 string sql = "SELECT OPERATION.ProductBId, OPERATIONLIST.BId FROM ProductOperation AS OPERATION INNER JOIN ProductOperationList AS OPERATIONLIST ON OPERATION.ListId = OPERATIONLIST.Id";
                 if (TextBoxProduct.TextLength != 0)
                 {
                     sql += " AND OPERATION.ProductBId LIKE '%" + TextBoxProduct.Text + "%'";
+                    historysql += " WHERE ProductBId LIKE '%" + TextBoxProduct.Text + "%'";
                 }
-                
-                using (SqlCommand cmd = new SqlCommand(sql, conn))
+
+                using (SqlCommand cmd = new SqlCommand(historysql, conn))
                 {
                     using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        dthistory = new DataTable();
+                        dthistory.Load(dr);
+                    }
+                }
+
+                using (SqlCommand cmd1 = new SqlCommand(sql, conn))
+                {
+                    using (SqlDataReader dr = cmd1.ExecuteReader())
                     {
                         dt = new DataTable();
                         dt.Load(dr);
@@ -70,7 +85,10 @@ namespace fluxx
 
                     if (i > 0 && dt.Rows[i][0].ToString() != dt.Rows[i - 1][0].ToString())
                     {
+                        if (dthistory != null)
+                        {
 
+                        }
                         result.Add(temp);
                         temp = new List<string>
                         {
@@ -82,9 +100,10 @@ namespace fluxx
                 result.Add(temp);
                 //dataGridView.Rows.Add()
             }
+            //result.Find
             if (result.Any())
             {
-                var type = "";
+                var tempvalue = "";
                 for(int i = 0;i<result.Count;i++)
                 {
                     int index = dataGridView.Rows.Add();
@@ -92,30 +111,39 @@ namespace fluxx
                     {
                         
                         dataGridView.Rows[index].Cells[0].Value = result[i][0];
-                        type = result[i][j];
-                        switch(type)
+                        tempvalue = result[i][j];
+                        if(Status.Contains(tempvalue))
                         {
-                            case "Boxing":
-                                dataGridView.Rows[index].Cells[1].Style.BackColor = Color.FromArgb(86, 156, 214);
-                                break;
-                            case "Cutting":
-                                dataGridView.Rows[index].Cells[2].Style.BackColor = Color.FromArgb(86, 156, 214);
-                                break;
-                            case "Packaging":
-                                dataGridView.Rows[index].Cells[3].Style.BackColor = Color.FromArgb(86, 156, 214);
-                                break;
-                            case "Repair":
-                                dataGridView.Rows[index].Cells[4].Style.BackColor = Color.FromArgb(86, 156, 214);
-                                break;
-                            case "Sampling":
-                            case "SamplingOnPackaging":
-                                dataGridView.Rows[index].Cells[5].Style.BackColor = Color.FromArgb(86, 156, 214);
-                                break;
-                            case "Weighing":
-                                dataGridView.Rows[index].Cells[6].Style.BackColor = Color.FromArgb(86, 156, 214);
-                                break;
-                            
+                            var pervieus = result[i][j - 1];
+
                         }
+                        else
+                        {
+                            switch (tempvalue)
+                            {
+                                case "Boxing":
+                                    dataGridView.Rows[index].Cells[1].Style.BackColor = Color.FromArgb(86, 156, 214);
+                                    break;
+                                case "Cutting":
+                                    dataGridView.Rows[index].Cells[2].Style.BackColor = Color.FromArgb(86, 156, 214);
+                                    break;
+                                case "Packaging":
+                                    dataGridView.Rows[index].Cells[3].Style.BackColor = Color.FromArgb(86, 156, 214);
+                                    break;
+                                case "Repair":
+                                    dataGridView.Rows[index].Cells[4].Style.BackColor = Color.FromArgb(86, 156, 214);
+                                    break;
+                                case "Sampling":
+                                case "SamplingOnPackaging":
+                                    dataGridView.Rows[index].Cells[5].Style.BackColor = Color.FromArgb(86, 156, 214);
+                                    break;
+                                case "Weighing":
+                                    dataGridView.Rows[index].Cells[6].Style.BackColor = Color.FromArgb(86, 156, 214);
+                                    break;
+
+                            }
+                        }
+
                         //dataGridView.Rows[index].Cells[1].Value = true;
                     }
                 }
